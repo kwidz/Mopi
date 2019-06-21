@@ -1,33 +1,80 @@
-#Ce fichier récupère toutes les informations sur les réservoirs du système
-#TODO verifier le charset ISO8859-1 ou windows 1252 car peut générer des
-#problèmes avec les accents
+#this file is retrieving all informations about reservoirs from Rio Tinto
+#Saguenay lac st jean system
+#TODO verify charset ISO8859-1 or windows 1252 because it generates problems
+#with accents
 
-#exemple reservoir("ccd", true, Float16(1.0), 2, [1.3, 1.4, 1.456])
+#example reservoir("ccd", true, Float16(1.0), 2, [1.3, 1.4, 1.456])
 struct Reservoir
-    nom::String
-    depassement_de_contrainte_possible::Bool
-#taux de variation horaire en m3 par heure
-    taux_de_variation_horaire_maximum::Float16
+    name::String
+    constraint_overrun::Bool
+#hourly variation rate  in m3 per hour
+    maximum_hourly_variation_rate::Float16
     #=
-        types de fonctions :
+        Mathematical functions types :
         1
-        2 cubique f(x) = c1*x^3 + c2*x^2 + c3*x + c4
+        2 cubic f(x) = c1*x^3 + c2*x^2 + c3*x + c4
         3 polynomial f(x) = c1*x^4 + c2*x^3 + c3*x^2 + c4*x + c5
-        4 Exponentielle f(x) = c1*x^c2+c3
+        4 Exponential f(x) = c1*x^c2+c3
         5
     =#
-    #Fonction d'évaluation du niveau en fonction du volume
-    type_de_fonction::Int
+    #Evaluation function of a reservoir's level in function of its volume
+    function_type::Int8
     coefficients::Array{Float64}
 end
 
+#contains all reservoir in the saguenay lac st jean's system
+reservoirs=Dict{String,Reservoir}()
+function is_end_of_file(line)
+    return occursin(r"FIN DU FICHIER",line)
+end
+#Function to avoid all comentaries in the config file
+function avoid_comments(file)
+    line=readline(file)
+    while(occursin(r"^# \w",line))
+        line=readline(file)
+    end
+    return line
+end
 
-open("../20171129T0952-CEQMT/donnees_statiques/reservoirs.txt") do fichier
-    ligne = readline(fichier)
-    while !occursin(r"FIN DU FICHIER",ligne)
-        if occursin(r"#\s\*{3}.*\*{3}(.*)",ligne)
-            println(ligne)
+#Return only the value of the line
+function get_value_on_line(line)
+    return match(r"=\s*(?<value>.*)$",line)[:value]
+end
+
+function read_file(path::String)
+    open(path) do file
+        line = readline(file)
+        #checking if the end of file is reached
+        while !eof(file)
+            while !occursin(r"#\s\*{3}.*\*{3}(.*)",line)
+                line = readline(file)
+            end
+            if(is_end_of_file(line))
+                break
+            end
+            name = get_value_on_line(avoid_comments(file))
+            constraint_overrun =
+                    parse(Bool,get_value_on_line(avoid_comments(file)))
+            maximum_hourly_variation_rate =
+                    parse(Float16,get_value_on_line(avoid_comments(file)))
+            function_type = parse(Int8,get_value_on_line(avoid_comments(file)))
+            line = readline(file)
+            coefficients=Float64[]
+            while(!occursin(r"#\s\*{3}.*\*{3}(.*)",line))
+                push!(coefficients, parse(Float64,get_value_on_line(line)))
+
+                line = readline(file)
+            end
+            reservoir = Reservoir(name,
+                                constraint_overrun,
+                                maximum_hourly_variation_rate,
+                                function_type,
+                                coefficients)
+            reservoirs[reservoir.name]=reservoir
+
         end
-        ligne = readline(fichier)
     end
 end
+
+read_file("../20171129T0952-CEQMT/donnees_statiques/reservoirs.txt")
+println(reservoirs)
