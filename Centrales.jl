@@ -5,6 +5,9 @@
 #regex to match all centrals datas at once
 
 # ---\s*\*{3}([\s\S]*?)#\s\*{3}
+#Warning, the first and 6th central's function is just the modelisation
+#of the spillay
+
 using StringEncodings
 
 struct Spillway
@@ -25,6 +28,8 @@ struct Central
     spillway::Spillway
     informations_file_name::String
     evacuation_capacity::Int
+
+
 
 
     #=

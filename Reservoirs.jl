@@ -22,6 +22,22 @@ struct Reservoir
     coefficients::Array{Float64}
 end
 
+function get_level(reservoir::Reservoir, volume)
+    if(reservoir.function_type==2)
+        return cubic(volume,reservoir.coefficients)
+    end
+    if(reservoir.function_type==3)
+        return polynomial(volume,reservoir.coefficients)
+    end
+    if(reservoir.function_type==4)
+        return exponential(volume,reservoir.coefficients)
+    end
+
+    return -1
+
+end
+
+
 #contains all reservoir in the saguenay lac st jean's system
 reservoirs=Dict{String,Reservoir}()
 function is_end_of_file(line)
