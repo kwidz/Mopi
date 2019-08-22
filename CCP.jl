@@ -43,7 +43,8 @@ function read_file(path::String)
     end
 end
 
-read_file("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt")
+#read_file("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt")
+read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt")
 println(ccpOverPeriods[20171129])
 println(ccpOverPeriods[20171229])
 println(ccpOverPeriods[20180308])
