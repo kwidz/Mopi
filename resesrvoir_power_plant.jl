@@ -1,13 +1,13 @@
 using StringEncodings
 
-struct Ccp
+struct reservoir_power_plant
     period::Int
     minimal_outflow::Float16
     coefficients::Array{Float64}
 end
-ccpOverPeriods=Dict{Int,Ccp}()
 
 function read_file(path::String)
+    plant_over_periods=Dict{Int,reservoir_power_plant}()
     nextLineIsCoefficients=false
     coefficients=Float64[]
     minimal_outflow=0.0
@@ -19,7 +19,7 @@ function read_file(path::String)
                 for (index, value) in enumerate(splitedLine)
                     push!(coefficients, parse(Float64, value))
                 end
-                ccpOverPeriods[period]=Ccp(period,minimal_outflow,coefficients)
+                plant_over_periods[period]=reservoir_power_plant(period,minimal_outflow,coefficients)
                 coefficients=Float64[]
                 minimal_outflow=0.0
                 period=0
@@ -41,10 +41,8 @@ function read_file(path::String)
             end
         end
     end
+    return plant_over_periods
 end
 
 #read_file("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt")
-read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt")
-println(ccpOverPeriods[20171129])
-println(ccpOverPeriods[20171229])
-println(ccpOverPeriods[20180308])
+println(read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))

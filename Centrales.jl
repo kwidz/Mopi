@@ -61,4 +61,5 @@ end
 
 
 
-read_file("../20171129T0952-CEQMT/donnees_statiques/centrales.txt")
+#read_file("../20171129T0952-CEQMT/donnees_statiques/centrales.txt")
+read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_statiques/centrales.txt")
