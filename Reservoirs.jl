@@ -21,13 +21,26 @@ struct Reservoir
     function_type::Int8
     coefficients::Array{Float64}
 end
+function poly(x::Float64, c::Array{Float64})
+    result = 0.0
+    power = size(c)[1]-1
+    for coeff in c
+        result+=coeff*x^power
+        power-=1
+    end
+    return result
+end
+function exponential(x::Float64, c::Array{Float64})
+
+    return c[1]*x^c[2]+c[3]
+end
 
 function get_level(reservoir::Reservoir, volume)
     if(reservoir.function_type==2)
-        return cubic(volume,reservoir.coefficients)
+        return poly(volume,reservoir.coefficients)
     end
     if(reservoir.function_type==3)
-        return polynomial(volume,reservoir.coefficients)
+        return poly(volume,reservoir.coefficients)
     end
     if(reservoir.function_type==4)
         return exponential(volume,reservoir.coefficients)
@@ -96,3 +109,10 @@ end
         read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_statiques/reservoirs.txt")
 
 println(reservoirs)
+println("###########")
+#finding initial level
+println(get_level(reservoirs["RLM"],2800.0))
+println(get_level(reservoirs["RPD"],4900.0))
+println(get_level(reservoirs["RCD"],400.0))
+println(get_level(reservoirs["RLSJ"],5000.0))
+println(get_level(reservoirs["RIM"],120.0))

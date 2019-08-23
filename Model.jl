@@ -1,5 +1,6 @@
 include("./reservoir_power_plant.jl")
-using NLPModels, NLPModelsIpopt, reservoir_power_plant
+include("./Periodes.jl")
+using NLPModels, NLPModelsIpopt, StringEncodings
 #TODO utiliser les données statiques de centrales pour compléter
 struct power_plant
     name::String
@@ -8,13 +9,16 @@ struct power_plant
 end
 
 BND=power_plant("BND",false,Dict{Int,reservoir_power_plant}())
-#CCP=power_plant("CCP",true,read_reservoir_power_plant("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt"))
-#CCD=power_plant("CCP",true,read_reservoir_power_plant("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))
-CCP=power_plant("CCP",true,read_reservoir_power_plant("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt"))
-CCD=power_plant("CCP",true,read_reservoir_power_plant("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))
-
+CCP=power_plant("CCP",true,read_reservoir_power_plant("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt"))
+CCD=power_plant("CCP",true,read_reservoir_power_plant("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))
+#CCP=power_plant("CCP",true,read_reservoir_power_plant("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt"))
+#CCD=power_plant("CCP",true,read_reservoir_power_plant("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))
 #Power plant set
 power_plants=[BND,CCP,CCD]
+
+#Periods set
+periods=read_periods("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/dates.txt")
+
 #x volume turbiné, h hauteur du réservoir
 function production(x,h)
     return x*h

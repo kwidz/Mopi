@@ -7,9 +7,10 @@ struct Day
     maximal_production::Float16
 end
 
-periods=Dict{Int,Day}()
 
-function read_file(path::String)
+
+function read_periods(path::String)
+    periods=Dict{Int,Day}()
     open(path,enc"WINDOWS-1252") do file
         for ln in eachline(file)
             if(!occursin(r"^# \w",ln))
@@ -22,6 +23,7 @@ function read_file(path::String)
                 periods[date]=d
             end
         end
+        return periods
     end
 
 
@@ -29,5 +31,4 @@ function read_file(path::String)
 end
 
 
-read_file("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/dates.txt")
-println(periods)
+#read_periods("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/dates.txt")

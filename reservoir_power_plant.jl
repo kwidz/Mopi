@@ -1,5 +1,4 @@
 using StringEncodings
-module reservoir_power_plant
 struct reservoir_power_plant
     period::Int
     minimal_outflow::Float16
@@ -43,6 +42,6 @@ function read_reservoir_power_plant(path::String)
     end
     return plant_over_periods
 end
-end
+
 #read_file("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_dynamiques/CCP.cmc.txt")
 #println(read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_dynamiques/CCD.cmc.txt"))
