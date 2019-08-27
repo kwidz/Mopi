@@ -20,7 +20,9 @@ struct Reservoir
     #Evaluation function of a reservoir's level in function of its volume
     function_type::Int8
     coefficients::Array{Float64}
+    level_over_periods::Dict{Int64,Float64}
 end
+
 function poly(x::Float64, c::Array{Float64})
     result = 0.0
     power = size(c)[1]-1
@@ -51,8 +53,7 @@ function get_level(reservoir::Reservoir, volume)
 end
 
 
-#contains all reservoir in the saguenay lac st jean's system
-reservoirs=Dict{String,Reservoir}()
+
 function is_end_of_file(line)
     return occursin(r"FIN DU FICHIER",line)
 end
@@ -70,7 +71,9 @@ function get_value_on_line(line)
     return match(r"=\s*(?<value>.*)$",line)[:value]
 end
 
-function read_file(path::String)
+function read_reservoirs(path::String, reservoir_over_periods::Dict{Int, Float64})
+    #contains all reservoir in the saguenay lac st jean's system
+    reservoirs=Dict{String,Reservoir}()
     open(path) do file
         line = readline(file)
         #checking if the end of file is reached
@@ -98,21 +101,27 @@ function read_file(path::String)
                                 constraint_overrun,
                                 maximum_hourly_variation_rate,
                                 function_type,
-                                coefficients)
+                                coefficients,
+                                reservoir_over_periods)
             reservoirs[reservoir.name]=reservoir
 
         end
     end
+    return reservoirs
 end
 
-        #read_file("../20171129T0952-CEQMT/donnees_statiques/reservoirs.txt")
-        read_file("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_statiques/reservoirs.txt")
+#level_over_periods = Dict{Int, Float64}()
+#for p in (periods)
+#    level_over_periods[p.date]=-1.0
+#end
+        #println(read_reservoirs("/home/kwidz/Doctorat/ProjetRioTinto/20171129T0952-CEQMT/donnees_statiques/reservoirs.txt",Dict{Int, Float64}()))
+        #read_reservoirs("C:/Users/geoffrey.glangine/Desktop/Projet Doctorat/20171129T0952-CEQMT/donnees_statiques/reservoirs.txt")
 
-println(reservoirs)
-println("###########")
+#println(reservoirs)
+#println("###########")
 #finding initial level
-println(get_level(reservoirs["RLM"],2800.0))
-println(get_level(reservoirs["RPD"],4900.0))
-println(get_level(reservoirs["RCD"],400.0))
-println(get_level(reservoirs["RLSJ"],5000.0))
-println(get_level(reservoirs["RIM"],120.0))
+#println(get_level(reservoirs["RLM"],2800.0))
+#println(get_level(reservoirs["RPD"],4900.0))
+#println(get_level(reservoirs["RCD"],400.0))
+#println(get_level(reservoirs["RLSJ"],5000.0))
+#println(get_level(reservoirs["RIM"],120.0))

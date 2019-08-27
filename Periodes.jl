@@ -10,7 +10,7 @@ end
 
 
 function read_periods(path::String)
-    periods=Dict{Int,Day}()
+    periods=Vector{Day}()
     open(path,enc"WINDOWS-1252") do file
         for ln in eachline(file)
             if(!occursin(r"^# \w",ln))
@@ -20,7 +20,7 @@ function read_periods(path::String)
                 minimal_production=parse(Float16,splitedLine[4])
                 maximal_production=parse(Float16,splitedLine[5])
                 d=Day(date,plants_load,minimal_production,maximal_production)
-                periods[date]=d
+                push!(periods,d)
             end
         end
         return periods
