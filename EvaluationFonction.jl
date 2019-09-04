@@ -4,9 +4,9 @@
 #y is the reservoir volume
 # coefficents is a table of all coefficients of the polynomial function
 using JuMP
-function EvaluatePolynomial(x::JuMP.NonlinearExpression,y::Float64,c::Array{Float64},model)
+function EvaluatePolynomial(x::JuMP.NonlinearExpression,y::Variable,c::Array{Float64},model)
     xx=@NLexpression(model,x*x)
-    yy=y*y
+    yy=@NLexpression(model,y*y)
        return        @NLexpression(model,c[1]+
                  y*c[2]+
                  x*c[3]+
